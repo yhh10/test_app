@@ -20,7 +20,7 @@ app.add_middleware(
 @app.post("/api/login")
 def login(user_data: UserCreate, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.username == user_data.username).first()
-    print(f"Flutter 수신된 유저 데이터 : {user_data.username}")
+    print(f"Flutter 수신된 유저 데이터 : {user_data.username}", flush=True)
 
 
 @app.post("/api/signin")
