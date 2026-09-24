@@ -48,8 +48,8 @@ class _SigninPageState extends State<SigninPage> {
         Uri.parse('http://134.185.114.3:8000/api/signin'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
-          'u' : _idController.text,
-          'pw' : _pwController.text,
+          'username' : _idController.text,
+          'password' : _pwController.text,
         }),
       ).timeout(const Duration(seconds: 5));
 
