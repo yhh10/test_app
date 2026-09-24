@@ -45,7 +45,7 @@ class _SigninPageState extends State<SigninPage> {
 
     try {
       final response = await http.post(
-        Uri.parse('http://localhost/signin'),
+        Uri.parse('http://134.185.114.3/api/signin'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'id' : _idController.text,
