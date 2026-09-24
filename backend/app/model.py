@@ -13,5 +13,6 @@ class User(Base):
     password: Mapped[str] = mapped_column(String(64), nullable=False)
 
     __table_args__ = {
-        {'mysql_engine': 'InnoDB','mysql_charset': 'utf8mb4',}
+        'mysql_engine': 'InnoDB',
+        'mysql_charset': 'utf8mb4',
     }
