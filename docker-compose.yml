@@ -15,6 +15,11 @@ services:
       - MYSQL_PASSWORD=myapppass
     ports:
       - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-papprootpass"]
+      interval: 5s
+      timeout: 5s
+      start_period: 10s
   backend:
     build: ./backend
     container_name: backend
