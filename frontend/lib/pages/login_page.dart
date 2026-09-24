@@ -40,27 +40,46 @@ class _LoginPageState extends State<LoginPage> {
         Uri.parse('http://134.185.114.3:8000/api/login'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
-          'id' : _idController.text,
-          'pw' : _pwController.text,
+          'username' : _idController.text,
+          'password' : _pwController.text,
         }),
       );
 
+      final data = jsonDecode(response.body);
+
+      if (!mounted) return;
+
       if (response.statusCode == 200) {
-        if (mounted) {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => const MyHomePage()),
-          );
-        } else {
-          setState(() {
-            _errorMessage = '아이디 또는 비밀번호가 일치하지 않습니다.';
-          });
-        }
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(data['message'] ?? "로그인 성공!"),
+            backgroundColor: Colors.green,
+            duration: const Duration(seconds: 2),
+          ),
+        );
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const MyHomePage()),
+        );
+      } else {
+        final errorMsg = data['detail'] ?? '아이디 또는 비밀번호가 일치하지 않습니다.';
+        setState(() {
+          _errorMessage = errorMsg;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(errorMsg),
+            backgroundColor: Colors.redAccent,
+            duration: const Duration(seconds: 2),
+          ),
+        );
       }
     } catch (e) {
-      setState(() {
-        _errorMessage = '서버와 연결할 수 없습니다. 다시 시도해주세요.';
-      });
+      if (mounted) {
+        setState(() {
+          _errorMessage = '서버와 연결할 수 없습니다. 다시 시도해주세요.';
+        });
+      }
     } finally {
       if (mounted) {
         setState(() {

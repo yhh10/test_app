@@ -48,28 +48,46 @@ class _SigninPageState extends State<SigninPage> {
         Uri.parse('http://134.185.114.3:8000/api/signin'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
-          'id' : _idController.text,
+          'u' : _idController.text,
           'pw' : _pwController.text,
         }),
       ).timeout(const Duration(seconds: 5));
 
+      if (!mounted) return;
+
+      final data = jsonDecode(utf8.decode(response.bodyBytes));
+
       if (response.statusCode == 200) {
-        if (mounted) {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => const MyHomePage()),
-          );
-        } else {
-          final errorData = jsonDecode(utf8.decode(response.bodyBytes));
-          setState(() {
-            _errorMessage = errorData['detail'] ?? '회원가입에 실패했습니다.';
-          });
-        }
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(data['message'] ?? '회원가입이 완료되었습니다.'),
+            backgroundColor: Colors.green,
+            duration: const Duration(seconds: 2),
+          ),
+        );
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const MyHomePage()),
+        );
+      } else {
+        final errorMsg = data['detail'] ?? '회원가입에 실패했습니다.';
+        setState(() {
+          _errorMessage = errorMsg;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(errorMsg),
+            backgroundColor: Colors.redAccent,
+            duration: const Duration(seconds: 2),
+          ),
+        );
       }
     } catch (e) {
-      setState(() {
-        _errorMessage = '서버와 연결할 수 없습니다. 다시 시도해주세요.';
-      });
+      if (mounted) {
+        setState(() {
+          _errorMessage = '서버와 연결할 수 없습니다. 다시 시도해주세요.';
+        });
+      }
     } finally {
       if (mounted) {
         setState(() {
