@@ -1,0 +1,11 @@
+# Web Framework & ASGI Server
+fastapi>=0.109.0
+uvicorn[standard]>=0.27.0
+
+# Database & ORM
+sqlalchemy>=2.0.25
+pymysql>=1.1.0        # MariaDB/MySQL 연동용 드라이버
+cryptography>=42.0.0   # DB 패스워드 및 보안 연결용
+
+# Data Validation & Email Check
+pydantic[email]>=2.6.0
