@@ -39,7 +39,7 @@ def login(user_data: UserCreate, db: Session = Depends(get_db)):
 def signin(user_data: UserCreate, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.username == user_data.username).first()
 
-    if not user:
+    if user:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="이미 존재하는 아이디입니다."
