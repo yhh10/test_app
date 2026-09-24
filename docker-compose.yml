@@ -23,6 +23,10 @@ services:
   backend:
     build: ./backend
     container_name: backend
+    env_file:
+      - ./backend/.env
+    volumes:
+      - ./backend:/app
     networks:
       - projectex_network
     ports:
