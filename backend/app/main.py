@@ -1,11 +1,11 @@
 from fastapi import FastAPI, Depends, HTTPException, status
-from schema import UserCreate
-from sqlalchemy.orm import Session
-from database import get_db, engine
 from fastapi.middleware.cors import CORSMiddleware
-import model
+from sqlalchemy.orm import Session
+from app.schema import UserCreate
+from app.database import get_db, engine
+from app.model import Base, User
 
-model.Base.metadata.create_all(bind=engine)
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
@@ -19,13 +19,10 @@ app.add_middleware(
 
 @app.get("/api/login")
 def login(user_data: UserCreate, db: Session = Depends(get_db)):
-    user = db.query(model.User).filter(model.User.username == user_data.username).first()
-    print(f"Flutter 수신된 유저 데이터 : {user_data}")
+    user = db.query(User).filter(User.username == user_data.username).first()
+    print(f"Flutter 수신된 유저 데이터 : {user_data.username}")
 
 
 @app.get("/api/signin")
 def signin(user_data: UserCreate, db: Session = Depends(get_db)):
-    user = db.query(model.User).filter(model.User.username == user_data.username).first()
-
-    if user:
-        pass
+    user = db.query(User).filter(User.username == user_data.username).first()
