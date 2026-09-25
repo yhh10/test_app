@@ -28,12 +28,18 @@ def login(user_data: UserCreate, db: Session = Depends(get_db)):
             detail="아이디 또는 비밀번호가 올바르지 않습니다.",
         )
 
-    return {
-        "status": "success",
-        "message": f"환영합니다. {user.username} 님",
-        "user_id": user.id,
-        "username": user.username,
-    }
+    if user.username == user_data.username and user.password == user_data.password:
+        return {
+            "status": "success",
+            "message": f"환영합니다. {user.username} 님",
+            "user_id": user.id,
+            "username": user.username,
+        }
+    else:
+        return {
+            "status": "fail",
+            "message": "아이디 또는 비밀번호가 올바르지 않습니다.",
+        }
 
 @app.post("/api/signin")
 def signin(user_data: UserCreate, db: Session = Depends(get_db)):
